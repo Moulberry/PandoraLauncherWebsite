@@ -86,7 +86,7 @@ pub fn home() -> Html {
                 DownloadType::WindowsPortable
             } else if asset.name.contains("-macOS") {
                 DownloadType::MacPortable
-            } else if asset.name.ends_with("-Linux") {
+            } else if asset.name.contains("-Linux") {
                 DownloadType::LinuxPortable
             } else {
                 log::info!("Unknown download type for filename: {}", &asset.name);
