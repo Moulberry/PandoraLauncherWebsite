@@ -125,7 +125,7 @@ pub fn home() -> Html {
                         <img src="pandora_main.svg" style="width: 45%"/>
                     </span>
                     <ybc::Subtitle size={ybc::HeaderSize::Is3}>
-                        {"Pandora is a launcher that launches Minecraft"}
+                        {"Pandora is a modern Minecraft launcher that balances ease-of-use with powerful instance management features "}
                     </ybc::Subtitle>
                 </ybc::Container>
                 </ybc::Section>
