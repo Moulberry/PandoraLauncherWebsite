@@ -49,6 +49,17 @@ enum OperatingSystem {
     Unknown,
 }
 
+#[derive(Hash, PartialEq, Eq, PartialOrd)]
+enum DownloadType {
+    WindowsInstaller,
+    WindowsPortable,
+    LinuxDebianInstaller,
+    LinuxAppImage,
+    LinuxPortable,
+    MacInstaller,
+    MacPortable,
+}
+
 #[function_component(Home)]
 pub fn home() -> Html {
     let releases = use_async_with_options(
@@ -59,11 +70,30 @@ pub fn home() -> Html {
         UseAsyncOptions::enable_auto()
     );
 
-    let mut releases_by_filename = HashMap::new();
+    let mut releases_by_type = HashMap::new();
 
     if let Some(data) = &releases.data {
         for asset in &data.assets {
-            releases_by_filename.insert(asset.name.clone(), asset.browser_download_url.clone());
+            let download_type = if asset.name.ends_with(".dmg") {
+                DownloadType::MacInstaller
+            } else if asset.name.ends_with(".AppImage") {
+                DownloadType::LinuxAppImage
+            } else if asset.name.ends_with(".deb") {
+                DownloadType::LinuxDebianInstaller
+            } else if asset.name.ends_with("-setup.exe") {
+                DownloadType::WindowsInstaller
+            } else if asset.name.ends_with(".exe") {
+                DownloadType::WindowsPortable
+            } else if asset.name.contains("-macOS") {
+                DownloadType::MacPortable
+            } else if asset.name.ends_with("-Linux") {
+                DownloadType::LinuxPortable
+            } else {
+                log::info!("Unknown download type for filename: {}", &asset.name);
+                continue;
+            };
+
+            releases_by_type.insert(download_type, asset.browser_download_url.clone());
         }
     }
 
@@ -105,7 +135,7 @@ pub fn home() -> Html {
                         html! {
                             <div style="display: flex; justify-content: center;">
                                 <div style="width: 30%">
-                                    <DownloadLink name="Download Windows Installer (.exe)" link={releases_by_filename.get("").cloned()}/>
+                                    <DownloadLink name="Download Windows Installer (.exe)" link={releases_by_type.get(&DownloadType::WindowsInstaller).cloned()}/>
                                 </div>
                             </div>
                         }
@@ -113,7 +143,7 @@ pub fn home() -> Html {
                         html! {
                             <div style="display: flex; justify-content: center;">
                                 <div style="width: 30%">
-                                    <DownloadLink name="Download macOS Installer (.dmg)" link={releases_by_filename.get("").cloned()}/>
+                                    <DownloadLink name="Download macOS Installer (.dmg)" link={releases_by_type.get(&DownloadType::MacInstaller).cloned()}/>
                                 </div>
                             </div>
                         }
@@ -132,23 +162,23 @@ pub fn home() -> Html {
                             <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
                                 <ybc::Tile ctx={Child} classes="notification is-primary">
                                     <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
-                                        {"Windows x86_64"}
+                                        {"Windows x64"}
                                     </ybc::Subtitle>
                                     <div style="display: flex; flex-direction: column; gap: 10px">
-                                    <DownloadLink name="Installer .exe (x64)" link={releases_by_filename.get("").cloned()}/>
-                                    <DownloadLink name="Portable Executable .exe (x64)" link={releases_by_filename.get("PandoraLauncher-Windows-x86_64.exe").cloned()}/>
+                                    <DownloadLink name="Installer .exe" link={releases_by_type.get(&DownloadType::WindowsInstaller).cloned()}/>
+                                    <DownloadLink name="Portable Executable .exe" link={releases_by_type.get(&DownloadType::WindowsPortable).cloned()}/>
                                     </div>
                                 </ybc::Tile>
                             </ybc::Tile>
                             <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
                                 <ybc::Tile ctx={Child} classes="notification is-primary">
                                     <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
-                                        {"Linux x86_64"}
+                                        {"Linux x64"}
                                     </ybc::Subtitle>
                                     <div style="display: flex; flex-direction: column; gap: 10px">
-                                    <DownloadLink name="Debian Installer .deb (x64)" link={releases_by_filename.get("").cloned()}/>
-                                    <DownloadLink name="AppImage .AppImage (x64)" link={releases_by_filename.get("").cloned()}/>
-                                    <DownloadLink name="Portable Executable (x64)" link={releases_by_filename.get("PandoraLauncher-Linux-x86_64").cloned()}/>
+                                    <DownloadLink name="Debian Installer .deb" link={releases_by_type.get(&DownloadType::LinuxDebianInstaller).cloned()}/>
+                                    <DownloadLink name="AppImage .AppImage" link={releases_by_type.get(&DownloadType::LinuxAppImage).cloned()}/>
+                                    <DownloadLink name="Portable Executable" link={releases_by_type.get(&DownloadType::LinuxPortable).cloned()}/>
                                     </div>
                                 </ybc::Tile>
                             </ybc::Tile>
@@ -158,9 +188,8 @@ pub fn home() -> Html {
                                         {"macOS"}
                                     </ybc::Subtitle>
                                     <div style="display: flex; flex-direction: column; gap: 10px">
-                                    <DownloadLink name="Installer .dmg" link={releases_by_filename.get("").cloned()}/>
-                                    <DownloadLink name="Portable App .app" link={releases_by_filename.get("").cloned()}/>
-                                    <DownloadLink name="Portable Executable" link={releases_by_filename.get("PandoraLauncher-MacOS-arm64").cloned()}/>
+                                    <DownloadLink name="Installer .dmg" link={releases_by_type.get(&DownloadType::MacInstaller).cloned()}/>
+                                    <DownloadLink name="Portable Executable" link={releases_by_type.get(&DownloadType::MacPortable).cloned()}/>
                                     </div>
                                 </ybc::Tile>
                             </ybc::Tile>
