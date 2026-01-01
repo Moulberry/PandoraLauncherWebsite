@@ -130,68 +130,134 @@ pub fn home() -> Html {
                 </ybc::Container>
                 </ybc::Section>
 
+                <div style="display: flex; flex-direction: column; align-items: center;">
                 {{
                     if operating_system == OperatingSystem::Windows {
                         html! {
-                            <div style="display: flex; justify-content: center;">
-                                <div style="width: 30%">
-                                    <DownloadLink name="Download Windows Installer (.exe)" link={releases_by_type.get(&DownloadType::WindowsInstaller).cloned()}/>
-                                </div>
+                            <div class="column is-one-third">
+                                <DownloadLink name="Download Windows Installer (.exe)" link={releases_by_type.get(&DownloadType::WindowsInstaller).cloned()}/>
                             </div>
                         }
                     } else if operating_system == OperatingSystem::MacOS {
                         html! {
-                            <div style="display: flex; justify-content: center;">
-                                <div style="width: 30%">
-                                    <DownloadLink name="Download macOS Installer (.dmg)" link={releases_by_type.get(&DownloadType::MacInstaller).cloned()}/>
-                                </div>
+                            <div class="column is-one-third">
+                                <DownloadLink name="Download macOS Installer (.dmg)" link={releases_by_type.get(&DownloadType::MacInstaller).cloned()}/>
                             </div>
                         }
                     } else {
                         Default::default()
                     }
                 }}
+                <div class="column is-one-third">
+                    <a href="#downloads">
+                        <ybc::Button classes="is-fullwidth">{"View downloads"}</ybc::Button>
+                    </a>
+                </div>
+                </div>
 
-                // {
-                //     format!("{:?}", releases.data)
-                // }
                 <ybc::Section>
-                <ybc::Tile ctx={Ancestor}>
-                    <ybc::Tile classes="is-vertical">
-                        <ybc::Tile>
-                            <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
-                                <ybc::Tile ctx={Child} classes="notification is-primary">
-                                    <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
-                                        {"Windows x64"}
-                                    </ybc::Subtitle>
-                                    <div style="display: flex; flex-direction: column; gap: 10px">
-                                    <DownloadLink name="Installer .exe" link={releases_by_type.get(&DownloadType::WindowsInstaller).cloned()}/>
-                                    <DownloadLink name="Portable Executable .exe" link={releases_by_type.get(&DownloadType::WindowsPortable).cloned()}/>
-                                    </div>
-                                </ybc::Tile>
+                <ybc::Tile classes="is-vertical" ctx={Ancestor}>
+                    <ybc::Tile>
+                        <ybc::Tile ctx={Parent} classes="is-vertical" size={ybc::TileSize::Four}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Instance Management"}
+                                </ybc::Subtitle>
+                                <p>{"Easily manage instances and mods. Pandora's unique approach to modpacks makes them simple to manage and update"}</p>
                             </ybc::Tile>
-                            <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
-                                <ybc::Tile ctx={Child} classes="notification is-primary">
-                                    <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
-                                        {"Linux x64"}
-                                    </ybc::Subtitle>
-                                    <div style="display: flex; flex-direction: column; gap: 10px">
-                                    <DownloadLink name="Debian Installer .deb" link={releases_by_type.get(&DownloadType::LinuxDebianInstaller).cloned()}/>
-                                    <DownloadLink name="AppImage .AppImage" link={releases_by_type.get(&DownloadType::LinuxAppImage).cloned()}/>
-                                    <DownloadLink name="Portable Executable" link={releases_by_type.get(&DownloadType::LinuxPortable).cloned()}/>
-                                    </div>
-                                </ybc::Tile>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"File Syncing"}
+                                </ybc::Subtitle>
+                                <p>{"Automatically sync files and folders across instances: options.txt, servers.dat, saves, mod configs, and more"}</p>
                             </ybc::Tile>
-                            <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
-                                <ybc::Tile ctx={Child} classes="notification is-primary">
-                                    <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
-                                        {"macOS"}
-                                    </ybc::Subtitle>
-                                    <div style="display: flex; flex-direction: column; gap: 10px">
-                                    <DownloadLink name="Installer .dmg" link={releases_by_type.get(&DownloadType::MacInstaller).cloned()}/>
-                                    <DownloadLink name="Portable Executable" link={releases_by_type.get(&DownloadType::MacPortable).cloned()}/>
-                                    </div>
-                                </ybc::Tile>
+                        </ybc::Tile>
+                        <ybc::Tile ctx={Parent} size={ybc::TileSize::Eight}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <img src="screenshots/instance.png"/>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                    </ybc::Tile>
+                    <ybc::Tile>
+                        <ybc::Tile ctx={Parent} size={ybc::TileSize::Eight}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <img src="screenshots/modrinth.png"/>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                        <ybc::Tile ctx={Parent} classes="is-vertical" size={ybc::TileSize::Four}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Content Browser"}
+                                </ybc::Subtitle>
+                                <p>{"Install mods, modpacks, and more directly through the launcher from Modrinth (CurseForge support coming soon)"}</p>
+                            </ybc::Tile>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Content Deduplication"}
+                                </ybc::Subtitle>
+                                <p>{"When installed through the launcher, Pandora will automatically deduplicate installed mods/resourcepacks/etc. using hard links to save space"}</p>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                    </ybc::Tile>
+                    <ybc::Tile>
+                        <ybc::Tile ctx={Parent} classes="is-vertical" size={ybc::TileSize::Four}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Game Output"}
+                                </ybc::Subtitle>
+                                <p>{"Pandora has a super responsive game output log with no size limit. Supports searching and uploading to mclo.gs"}</p>
+                            </ybc::Tile>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Secure"}
+                                </ybc::Subtitle>
+                                <p>{"Stores account credentials using platform keyrings, automatically redacts sensitive information from logs and avoids automatic updates for manually installed mods"}</p>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                        <ybc::Tile ctx={Parent} size={ybc::TileSize::Eight}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <img src="screenshots/gameoutput.png"/>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                    </ybc::Tile>
+                    <div id="downloads" style="display: flex; flex-direction: column; align-items: center; padding-top: 40px;">
+                    <ybc::Subtitle size={ybc::HeaderSize::Is2} classes="has-text-white">
+                        {"Downloads"}
+                    </ybc::Subtitle>
+                    </div>
+                    <ybc::Tile>
+                        <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Windows x64"}
+                                </ybc::Subtitle>
+                                <div style="display: flex; flex-direction: column; gap: 10px">
+                                <DownloadLink name="Installer .exe" link={releases_by_type.get(&DownloadType::WindowsInstaller).cloned()}/>
+                                <DownloadLink name="Portable Executable .exe" link={releases_by_type.get(&DownloadType::WindowsPortable).cloned()}/>
+                                </div>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                        <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"Linux x64"}
+                                </ybc::Subtitle>
+                                <div style="display: flex; flex-direction: column; gap: 10px">
+                                <DownloadLink name="Debian Installer .deb" link={releases_by_type.get(&DownloadType::LinuxDebianInstaller).cloned()}/>
+                                <DownloadLink name="AppImage .AppImage" link={releases_by_type.get(&DownloadType::LinuxAppImage).cloned()}/>
+                                <DownloadLink name="Portable Executable" link={releases_by_type.get(&DownloadType::LinuxPortable).cloned()}/>
+                                </div>
+                            </ybc::Tile>
+                        </ybc::Tile>
+                        <ybc::Tile ctx={Parent} size={ybc::TileSize::Four}>
+                            <ybc::Tile ctx={Child} classes="notification is-primary">
+                                <ybc::Subtitle size={ybc::HeaderSize::Is3} classes="has-text-white">
+                                    {"macOS"}
+                                </ybc::Subtitle>
+                                <div style="display: flex; flex-direction: column; gap: 10px">
+                                <DownloadLink name="Installer .dmg" link={releases_by_type.get(&DownloadType::MacInstaller).cloned()}/>
+                                <DownloadLink name="Portable Executable" link={releases_by_type.get(&DownloadType::MacPortable).cloned()}/>
+                                </div>
                             </ybc::Tile>
                         </ybc::Tile>
                     </ybc::Tile>
