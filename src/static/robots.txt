@@ -28,5 +28,5 @@
 # IN THE DIGITAL SINGLE MARKET.
 
 User-Agent: *
-Content-Signal: ai-train=no, search=yes, ai-input=no
+Content-Signal: ai-train=no, search=yes, ai-input=yes
 Allow: /
