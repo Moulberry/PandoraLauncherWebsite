@@ -100,7 +100,7 @@ pub fn home() -> Html {
                 DownloadType::LinuxAppImage
             } else if asset.name.ends_with(".deb") {
                 DownloadType::LinuxDebianInstaller
-            } else if asset.name.ends_with("-setup.exe") {
+            } else if asset.name.ends_with("-Setup.exe") {
                 DownloadType::WindowsInstaller
             } else if asset.name.ends_with(".exe") {
                 DownloadType::WindowsPortable
