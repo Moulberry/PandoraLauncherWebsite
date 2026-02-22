@@ -94,22 +94,23 @@ pub fn home() -> Html {
 
     if let Some(data) = &releases.data {
         for asset in &data.assets {
-            let download_type = if asset.name.ends_with(".dmg") {
+            let name = asset.name.to_ascii_lowercase();
+            let download_type = if name.ends_with(".dmg") {
                 DownloadType::MacInstaller
-            } else if asset.name.ends_with(".AppImage") {
+            } else if name.ends_with(".appimage") {
                 DownloadType::LinuxAppImage
-            } else if asset.name.ends_with(".deb") {
+            } else if name.ends_with(".deb") {
                 DownloadType::LinuxDebianInstaller
-            } else if asset.name.ends_with("-setup.exe") {
+            } else if name.ends_with("-setup.exe") {
                 DownloadType::WindowsInstaller
-            } else if asset.name.ends_with(".exe") {
+            } else if name.ends_with(".exe") {
                 DownloadType::WindowsPortable
-            } else if asset.name.contains("-macOS") {
+            } else if name.contains("-macos") {
                 DownloadType::MacPortable
-            } else if asset.name.contains("-Linux") {
+            } else if name.contains("-linux") {
                 DownloadType::LinuxPortable
             } else {
-                log::info!("Unknown download type for filename: {}", &asset.name);
+                log::info!("Unknown download type for filename: {}", &name);
                 continue;
             };
 
